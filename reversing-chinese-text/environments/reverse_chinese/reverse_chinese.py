@@ -46,6 +46,7 @@ def load_environment(
             lcs_reward_func,
         ],
         weights=[1.0],
+        parser=parser,
     )
 
     vf_env = vf.SingleTurnEnv(

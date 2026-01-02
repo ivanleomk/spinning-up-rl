@@ -92,6 +92,8 @@ uv pip install vllm
 log_info "Installing wandb..."
 uv pip install wandb
 
+
+
 # -------------------------------------------------------------------
 # 8. Install prime CLI tool
 # -------------------------------------------------------------------
@@ -102,7 +104,7 @@ uv tool install prime
 # 9. Install the chinese-text-reverse environment (verifiers)
 # -------------------------------------------------------------------
 log_info "Installing chinese-text-reverse environment..."
-prime env install ivanleomk/chinese-text-reverse
+prime env install ivanleomk/reverse-chinese
 
 # -------------------------------------------------------------------
 # 10. Verify installation
@@ -124,7 +126,7 @@ uv run python -c "import flash_attn; print(f'flash-attn: OK')" || log_warn "flas
 uv run python -c "import vllm; print(f'vllm: OK')" || log_warn "vllm import failed"
 
 # Check verifiers environment
-uv run python -c "import chinese_text_reverse; print(f'chinese-text-reverse env: OK')" || log_warn "chinese-text-reverse import failed"
+uv run python -c "import reverse_chinese; print(f'chinese-text-reverse env: OK')" || log_warn "chinese-text-reverse import failed"
 
 
 # -------------------------------------------------------------------
@@ -133,13 +135,14 @@ uv run python -c "import chinese_text_reverse; print(f'chinese-text-reverse env:
 if [[ -n "${WANDB_API_KEY:-}" ]]; then
     log_info "Logging into wandb..."
     uv run wandb login "$WANDB_API_KEY"
+    uv run wandb login --verify
 else
     log_warn "WANDB_API_KEY not set, skipping wandb login"
 fi
 
 if [[ -n "${HF_TOKEN:-}" ]]; then
     log_info "Logging into HuggingFace..."
-    uv run huggingface-cli login --token "$HF_TOKEN"
+    uvx hf auth login --token "$HF_TOKEN"
 else
     log_warn "HF_TOKEN not set, skipping HuggingFace login"
 fi
